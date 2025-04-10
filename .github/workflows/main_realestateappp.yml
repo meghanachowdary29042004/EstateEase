@@ -1,3 +1,6 @@
+# Docs: https://github.com/Azure/webapps-deploy
+# Node.js App Deployment Workflow
+
 name: Build and deploy Node.js app to Azure Web App - realestateappp
 
 on:
@@ -20,23 +23,27 @@ jobs:
         with:
           node-version: '22.x'
 
+      # Install backend dependencies
       - name: Install backend dependencies
         run: |
           cd api
           npm install
 
+      # Install frontend dependencies and build
       - name: Install frontend dependencies and build
         run: |
           cd client
           npm install
           npm run build
 
-      - name: Move frontend build into backend (optional if API serves frontend)
+      # Move frontend build into backend (for deployment as one package)
+      - name: Move frontend build into backend
         run: |
-          rm -rf api/public
-          mv client/dist api/public
+          rm -rf api/client
+          mv client/build api/client
 
-      - name: Zip backend for deployment
+      # Zip the backend (with frontend build inside)
+      - name: Zip deployment package
         run: |
           cd api
           zip -r ../release.zip .
@@ -58,7 +65,7 @@ jobs:
       contents: read
 
     steps:
-      - name: Download artifact from build job
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: node-app
@@ -69,9 +76,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.__clientidsecretname__ }}
+          tenant-id: ${{ secrets.__tenantidsecretname__ }}
+          subscription-id: ${{ secrets.__subscriptionidsecretname__ }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
