@@ -31,7 +31,7 @@ jobs:
       - name: Move frontend build to api/client
         run: |
           mkdir -p api/client
-          cp -r client/build/* api/client/
+          cp -r client/* api/client/
 
       - name: Install backend dependencies
         run: |
