@@ -17,19 +17,16 @@ app.use(express.json());
 app.use(cookieParser());
 
 // MongoDB connection
-mongoose
-  .connect("mongodb+srv://meghana:meghana@cluster0.pnfdw.mongodb.net/mern?retryWrites=true&w=majority&appName=Cluster0"
-    , {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
 
-    })
+
+mongoose.connect("mongodb+srv://meghana:meghana@mern.plmmf.mongodb.net/?retryWrites=true&w=majority&appName=mern")
   .then(() => {
-    console.log('Connected to MongoDB!');
+    console.log("Connected to MongoDB!");
   })
   .catch((err) => {
-    console.log('Error connecting to MongoDB:', err);
+    console.error("Error connecting to MongoDB:", err);
   });
+
 
 // Define routes
 app.use('/api/user', userRouter);
